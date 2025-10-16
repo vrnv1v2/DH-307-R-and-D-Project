@@ -3,4 +3,5 @@ pandas
 matplotlib
 openpyxl
 numpy
+geopandas
 seaborn
