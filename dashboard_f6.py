@@ -13,7 +13,7 @@ st.title("RSV Data Dashboard")
 # ----------------------------
 # Load Excel file
 # ----------------------------
-excel_file = "DH307_Dashboard_Code_V12.xlsx"
+excel_file = "DH307_Dashboard_Code_V15.xlsx"
 try:
     xls = pd.ExcelFile(excel_file)
 except Exception as e:
@@ -391,6 +391,24 @@ def plot_symptom_difference(variant, excel_file):
 # ----------------------------
 # Seasonal & Vaccine
 # ----------------------------
+def plot_antibiotics(df):
+    if "Antibiotic" not in df.columns or "Count" not in df.columns:
+        st.info("Antibiotic sheet missing required columns (needs 'Antibiotic' and 'Count').")
+        return
+
+    df = df.copy()
+    df["Count"] = pd.to_numeric(df["Count"], errors="coerce").fillna(0)
+    df = df.sort_values("Count", ascending=False).reset_index(drop=True)
+
+    fig, ax = plt.subplots(figsize=(12, 6))
+    bars = ax.bar(df["Antibiotic"], df["Count"],
+                  color=plt.cm.Blues(df["Count"] / df["Count"].max()))
+    ax.set_xticklabels(df["Antibiotic"], rotation=45, ha="right")
+    ax.set_ylabel("Usage Count")
+    ax.set_title(f"{variant.upper()} - Top Antibiotics Used", fontsize=14, fontweight="bold")
+    ax.grid(axis='y', linestyle='--', alpha=0.3)
+    plt.tight_layout()
+    st.pyplot(fig)
 def plot_seasonal(df):
     if 'Month of Onset' not in df.columns or 'Cases' not in df.columns:
         st.info("Seasonal sheet missing required columns.")
@@ -502,6 +520,10 @@ with tabs[0]:
 
         elif feature == "season":
             plot_seasonal(df)
+        elif feature == "antiobiotics" or feature == "antibiotics":
+            st.subheader("Top Antibiotics Used")
+            plot_antibiotics(df)
+            
         elif feature == "vaccine":
             plot_vaccine_analysis(df)
         else:
