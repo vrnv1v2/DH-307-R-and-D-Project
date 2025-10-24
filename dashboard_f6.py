@@ -13,7 +13,7 @@ st.title("RSV Data Dashboard")
 # ----------------------------
 # Load Excel file
 # ----------------------------
-excel_file = r"C:\Users\thing\Downloads\DH307_Dashboard_Code_V16.xlsx"
+excel_file = "DH307_Dashboard_Code_V16.xlsx"
 try:
     xls = pd.ExcelFile(excel_file)
 except Exception as e:
