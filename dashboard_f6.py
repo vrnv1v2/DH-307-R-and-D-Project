@@ -89,13 +89,13 @@ if variant != "deaths" and "Yes" in df.columns and "No" in df.columns:
     df["% Positive"] = (df["Yes"] / (df["Yes"] + df["No"])) * 100
     df["% Positive"] = df["% Positive"].round(2)
 
-geojson_path = r"C:\Users\thing\Downloads\india_state.geojson"
-try:
-    gdf = gpd.read_file(geojson_path)
-    gdf['NAME_1_lower'] = gdf['NAME_1'].str.strip().str.lower()
-except Exception as e:
-    st.error(f"Failed to load local India GeoJSON: {e}")
-    st.stop()
+# geojson_path = r"C:\Users\thing\Downloads\india_state.geojson"
+# try:
+#     gdf = gpd.read_file(geojson_path)
+#     gdf['NAME_1_lower'] = gdf['NAME_1'].str.strip().str.lower()
+# except Exception as e:
+#     st.error(f"Failed to load local India GeoJSON: {e}")
+#     st.stop()
 
 # ----------------------------
 # Normalize State column
