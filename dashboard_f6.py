@@ -7,8 +7,8 @@ import numpy as np
 # ----------------------------
 # Page config
 # ----------------------------
-st.set_page_config(page_title="RSV Dashboard", layout="wide")
-st.title("RSV Data Dashboard")
+st.set_page_config(page_title="Disease Dashboard", layout="wide")
+st.title("Disease Data Dashboard")
 
 # ----------------------------
 # Load Excel file
