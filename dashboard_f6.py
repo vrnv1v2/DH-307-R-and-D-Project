@@ -13,7 +13,7 @@ st.title("Disease Data Dashboard")
 # ----------------------------
 # Load Excel file
 # ----------------------------
-excel_file = "DH307_Dashboard_Code_V19.xlsx"
+excel_file = "DH307_Dashboard_Code_V20.xlsx"
 try:
     xls = pd.ExcelFile(excel_file)
 except Exception as e:
@@ -398,30 +398,37 @@ def plot_seasonal(df):
 
     df = df.copy()
     df['Cases'] = pd.to_numeric(df['Cases'], errors='coerce').fillna(0)
-    df['Month'] = pd.to_datetime(df['Month of Onset'], format='%b-%y', errors='coerce')
-    df = df.dropna(subset=['Month'])
-    df['Year'] = df['Month'].dt.year
-    df['Month_Num'] = df['Month'].dt.month
 
-    # Prepare pivot for comparison
-    pivot_df = df.pivot_table(values='Cases', index='Month_Num', columns='Year', aggfunc='sum').fillna(0)
-    month_labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+    # Split into Month and Year label parts
+    df[['Month_Name', 'Season_Label']] = df['Month of Onset'].str.extract(r'([A-Za-z]+)-?(Year ?\d+)')
+    
+    # Drop rows that didn’t match the pattern
+    df = df.dropna(subset=['Month_Name', 'Season_Label'])
+    
+    # Map month names to numbers
+    month_order = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+    df['Month_Num'] = df['Month_Name'].str[:3].str.title().map({m:i+1 for i,m in enumerate(month_order)})
 
+    # Create pivot table for Year 1 vs Year 2 comparison
+    pivot_df = df.pivot_table(values='Cases', index='Month_Num', columns='Season_Label', aggfunc='sum').fillna(0)
+
+    # Plot setup
+    month_labels = month_order
     fig, ax = plt.subplots(figsize=(12, 6))
-    legend_labels = [f"Year {i+1}" for i in range(len(pivot_df.columns))]
 
-    for i, year in enumerate(pivot_df.columns):
-        ax.plot(pivot_df.index, pivot_df[year], marker='o', label=legend_labels[i])
+    for label in pivot_df.columns:
+        ax.plot(pivot_df.index, pivot_df[label], marker='o', label=label)
 
     ax.set_xticks(range(1, 13))
     ax.set_xticklabels(month_labels, rotation=45, ha='right')
     ax.set_xlabel('Month', fontsize=12)
     ax.set_ylabel('Disease Cases', fontsize=12)
     ax.set_title(f"{variant.upper()} - Seasonal Comparison (Year 1 vs Year 2)", fontsize=14, fontweight='bold')
-    ax.legend(title="Year")
+    ax.legend(title="Season")
     ax.grid(axis='y', linestyle='--', alpha=0.3)
     plt.tight_layout()
     st.pyplot(fig)
+
 
 
 def plot_vaccine_analysis(df):
