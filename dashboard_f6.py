@@ -417,7 +417,7 @@ def plot_seasonal(df):
     ax.set_xticklabels(month_labels, rotation=45, ha='right')
     ax.set_xlabel('Month', fontsize=12)
     ax.set_ylabel('Disease Cases', fontsize=12)
-    ax.set_title(f"{variant.upper()} - Seasonal Comparison (2023 vs 2024)", fontsize=14, fontweight='bold')
+    ax.set_title(f"{variant.upper()} - Seasonal Comparison (Year 1 vs Year 2)", fontsize=14, fontweight='bold')
     ax.legend(title="Year")
     ax.grid(axis='y', linestyle='--', alpha=0.3)
     plt.tight_layout()
