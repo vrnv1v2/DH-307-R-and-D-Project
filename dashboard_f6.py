@@ -408,13 +408,15 @@ def plot_seasonal(df):
     month_labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
     fig, ax = plt.subplots(figsize=(12, 6))
-    for year in pivot_df.columns:
-        ax.plot(pivot_df.index, pivot_df[year], marker='o', label=str(year))
+    legend_labels = [f"Year {i+1}" for i in range(len(pivot_df.columns))]
+
+    for i, year in enumerate(pivot_df.columns):
+        ax.plot(pivot_df.index, pivot_df[year], marker='o', label=legend_labels[i])
 
     ax.set_xticks(range(1, 13))
     ax.set_xticklabels(month_labels, rotation=45, ha='right')
     ax.set_xlabel('Month', fontsize=12)
-    ax.set_ylabel('RSV Cases', fontsize=12)
+    ax.set_ylabel('Disease Cases', fontsize=12)
     ax.set_title(f"{variant.upper()} - Seasonal Comparison (2023 vs 2024)", fontsize=14, fontweight='bold')
     ax.legend(title="Year")
     ax.grid(axis='y', linestyle='--', alpha=0.3)
